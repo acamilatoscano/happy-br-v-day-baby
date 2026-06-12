@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy BR V-Day, Baby!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Eagle+Lake&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --black:#0d0b0a;
+        --red:#b3121b;
+        --red-deep:#7a0c12;
+        --cream:#f3e6d3;
+        --white:#fffaf2;
+    }
+
+    *{ margin:0; padding:0; box-sizing:border-box; }
+
+    html,body{
+        height:100%;
+    }
+
+    body{
+        font-family:'Special Elite', monospace;
+        background-color:var(--black);
+        background-image:
+            radial-gradient(circle at 1px 1px, rgba(179,18,27,0.18) 1px, transparent 1.6px);
+        background-size: 18px 18px;
+        color:var(--white);
+        scroll-snap-type: y mandatory;
+        overflow-y:scroll;
+        height:100vh;
+        height:100dvh;
+    }
+
+    .header{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:8px;
+        padding:12px 14px;
+        z-index:30;
+        pointer-events:none;
+    }
+
+    .header > *{ pointer-events:auto; }
+
+    .banner{
+        background:var(--red);
+        color:var(--white);
+        font-family:'Rye', serif;
+        font-size:13px;
+        letter-spacing:2px;
+        text-transform:uppercase;
+        padding:7px 20px;
+        border:2px solid var(--white);
+        box-shadow: 0 0 0 3px var(--black), 0 0 0 5px var(--red-deep);
+        white-space:nowrap;
+        text-align:center;
+        transform: rotate(-2deg);
+    }
+
+    .controls-row{
+        width:100%;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .shuffle-btn{
+        background:var(--black);
+        color:var(--white);
+        border:2px solid var(--red);
+        padding:10px 16px;
+        cursor:pointer;
+        font-family:'Rye', serif;
+        font-size:12px;
+        letter-spacing:2px;
+        text-transform:uppercase;
+        transition: all 0.2s ease;
+        box-shadow: 0 0 0 2px var(--black), 0 3px 0 var(--red-deep);
+    }
+
+    .shuffle-btn:active{ transform:translateY(2px); }
+
+    .shuffle-btn:hover{
+        background:var(--red);
+        color:var(--white);
+    }
+
+    .counter{
+        font-family:'Rye', serif;
+        font-size:13px;
+        letter-spacing:2px;
+        color:var(--black);
+        background:var(--red);
+        border:2px solid var(--white);
+        box-shadow:0 0 0 2px var(--black);
+        padding:5px 12px;
+    }
+
+    .card{
+        scroll-snap-align: start;
+        width:100%;
+        height:100vh;
+        height:100dvh;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:14px;
+        padding:120px 18px 40px;
+    }
+
+    .art-frame{
+        position:relative;
+        display:inline-flex;
+        max-width:340px;
+        max-width:min(340px, 90vw);
+        max-height:68vh;
+        background:var(--white);
+        border:4px solid var(--black);
+        box-shadow:
+            0 0 0 3px var(--red),
+            0 0 0 7px var(--black),
+            0 10px 25px rgba(0,0,0,0.6);
+        padding:8px;
+    }
+
+    .art-frame img{
+        display:block;
+        max-width:100%;
+        max-height:68vh;
+        width:auto;
+        height:auto;
+        object-fit:contain;
+        border:2px solid var(--red-deep);
+        background:var(--white);
+    }
+
+    .corner{
+        position:absolute;
+        font-size:20px;
+        color:var(--red);
+        z-index:5;
+    }
+    .corner.tl{ top:-12px; left:-12px; }
+    .corner.tr{ top:-12px; right:-12px; }
+    .corner.bl{ bottom:-12px; left:-12px; }
+    .corner.br{ bottom:-12px; right:-12px; }
+
+    @media (max-width: 480px){
+        .banner{ font-size:12px; padding:7px 18px; letter-spacing:2px; }
+        .card{ padding:110px 12px 30px; gap:12px; }
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <div class="banner">&hearts; Happy BR V-Day, Baby! &hearts;</div>
+        <div class="controls-row">
+            <div class="counter"><span id="total">14</span> cart&otilde;es</div>
+            <button class="shuffle-btn" onclick="shuffleCards()">&#9842; Embaralhar</button>
+        </div>
+    </div>
+
+    <div id="cardsWrapper"></div>
+
+    <script>
+        const cards = [
+            {
+                img: "coronaria_descendente.png",
+                alt: "Ilustração de uma artéria coronária descendente anterior"
+            },
+            {
+                img: "saudade.png",
+                alt: "Querubim com uma bolsa de coração em formato de soro"
+            },
+            {
+                img: "hemodinamica.png",
+                alt: "Querubim abraçando um coração anatômico"
+            },
+            {
+                img: "frank_starling.png",
+                alt: "Gráfico da lei de Frank-Starling com um coração no eixo"
+            },
+            {
+                img: "valva_mitral.png",
+                alt: "Querubim segurando um coração com a valva mitral em destaque"
+            },
+            {
+                img: "ritmo_sinusal.png",
+                alt: "Querubim deitado com um traçado de ritmo sinusal"
+            },
+            {
+                img: "arritmia.png",
+                alt: "Cupido com arco e flecha e traçado de ECG"
+            },
+            {
+                img: "fibrilacao.png",
+                alt: "Querubim com borboletas voando ao redor"
+            },
+            {
+                img: "coronarias_regador.png",
+                alt: "Querubim regando um coração com um regador"
+            },
+            {
+                img: "ventriculo_esquerdo.png",
+                alt: "Querubim abraçado a um coração anatômico grande"
+            },
+            {
+                img: "faculdade.png",
+                alt: "Querubim lendo um livro sobre o coração"
+            },
+            {
+                img: "swan_ganz.png",
+                alt: "Monitor de débito cardíaco estilo Swan-Ganz"
+            },
+            {
+                img: "curva_arterial.png",
+                alt: "Gráfico de curva de pressão arterial com um balão de coração"
+            },
+            {
+                img: "volume_sistolico.png",
+                alt: "Querubim com uma seringa representando volume sistólico"
+            }
+        ];
+
+        function render(order){
+            const wrapper = document.getElementById('cardsWrapper');
+            wrapper.innerHTML = '';
+            order.forEach((c) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="art-frame">
+                        <span class="corner tl">&hearts;</span>
+                        <span class="corner tr">&starf;</span>
+                        <span class="corner bl">&starf;</span>
+                        <span class="corner br">&hearts;</span>
+                        <img src="${c.img}" alt="${c.alt}">
+                    </div>
+                `;
+                wrapper.appendChild(card);
+            });
+        }
+
+        function shuffleCards(){
+            const shuffled = [...cards];
+            for(let i = shuffled.length - 1; i > 0; i--){
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            render(shuffled);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+
+        render(cards);
+    </script>
+</body>
+</html>
